@@ -48,10 +48,9 @@ public class HomeController {
 	}
     
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> adminAccess() {
     	return ResponseEntity.ok(new MessageResponse("ADMIN CONTENT"));
-
     }
     
     @GetMapping("/user")
@@ -59,8 +58,4 @@ public class HomeController {
     public ResponseEntity<?> userAccess() {
       return ResponseEntity.ok(new MessageResponse("USER CONTENT"));
     }
-    
-    
-   
-
 }

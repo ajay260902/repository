@@ -106,12 +106,14 @@ public class User implements UserDetails {
 	public String toString() {
 		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password + "]";
 	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-		return authorities;
+	    Set<GrantedAuthority> authorities = new HashSet<>();
+	    String[] roleArray = role.split(",");
+	    for (String role : roleArray) {
+	        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.trim()));
+	    }
+	    return authorities;
 	}
 
 	@Override
