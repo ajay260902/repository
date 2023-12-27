@@ -44,6 +44,7 @@ public class UserDAO {
 	public Optional<User> findByEmail(String email) {
 		try {
 			String sql = "SELECT * FROM user_table WHERE email = ?";
+			@SuppressWarnings("deprecation")
 			User user = jdbcTemplate.queryForObject(sql, new Object[] { email }, new UserRowMapper());
 			return Optional.ofNullable(user);
 		} catch (Exception e) {
