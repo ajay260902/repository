@@ -1,6 +1,5 @@
 package com.jwt.demo.entity;
 
-import java.sql.ResultSet;
 
 import org.springframework.jdbc.core.RowMapper;
 

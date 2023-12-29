@@ -2,12 +2,15 @@ package com.jwt.demo.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +30,14 @@ import com.jwt.demo.jwt.MessageResponse;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin("http://localhost:3001")
 public class UserController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    @Qualifier("hrmsJdbcTemplate")
+    private  JdbcTemplate hrmsJdbcTemplate;
 
     // Get all menus id
     @GetMapping("/allid")
@@ -148,14 +155,14 @@ public class UserController {
         return jdbcTemplate.query(sb.toString(), Employee.rowMapper2);
     }
 
-    // get perticuker CRO for employee
+    // get perticuler CRO for employee
     @GetMapping("/cro")
     public List<Cro> getCRO() {
         // You can replace this with the desired CRO code
 
         String croCode = "F0052";
 
-        StringBuilder sqlQuery = new StringBuilder();
+        StringBuilder sqlQuery = new StringBuilder();   
         sqlQuery.append("SELECT e1.Mecode AS Employee_Code, ")
                 .append("e1.Mename AS Employee_Name, ")
                 .append("e1.CRO AS Employee_CRO, ")
@@ -167,12 +174,12 @@ public class UserController {
     }
 
     @PostMapping("/update-cro/{id}")
-    public ResponseEntity<?> updateCRO(@PathVariable String id, @RequestBody String CRO) {
+    public ResponseEntity<?> updateCRO(@PathVariable String id, @RequestBody CroUpdateRequest CRO) {
         String sql = "UPDATE access.employee_master SET CRO = ? WHERE Mecode = ?";
         System.out.println("Mecode: " + id);
-        System.out.println("CRO: " + CRO);
+        System.out.println("CRO: " + CRO.CRO());
 
-        int rowsAffected = jdbcTemplate.update(sql, CRO, id);
+        int rowsAffected = jdbcTemplate.update(sql, CRO.CRO(), id);
 
         if (rowsAffected > 0) {
             return ResponseEntity.ok(new MessageResponse("CRO updated successfully for Employee with Mecode: " + id));
@@ -181,6 +188,16 @@ public class UserController {
                     .body(new MessageResponse("Employee with Mecode: " + id + " not found or CRO not updated."));
         }
     }
+
+
+    //HRMS DATA DEMOSTRATION 
+    @GetMapping("/data")
+    public List<Map<String, Object>> getData() {
+        String query = "SELECT * FROM emp_master";
+        List<Map<String, Object>> result = hrmsJdbcTemplate.queryForList(query);
+        return result;
+    }
+
 
     // Exception handler for DataAccessException
     @ExceptionHandler(DataAccessException.class)

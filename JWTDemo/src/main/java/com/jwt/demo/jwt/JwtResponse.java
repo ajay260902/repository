@@ -2,19 +2,14 @@ package com.jwt.demo.jwt;
 
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-
 @Builder
-@ToString
 @Data
 @Component
 public class JwtResponse {
@@ -22,7 +17,7 @@ public class JwtResponse {
 	private String username;
 
 	public JwtResponse() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public JwtResponse(String jwttoken, String username) {
